@@ -34,6 +34,7 @@ const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: currentUser } = useGetCurrentUserQuery();
+  console.log("log-1 currentUser: ", currentUser);
   const { data, isFetching } = useGetUsersWithStatusQuery(
     {
       userId: currentUser?._id ?? "",

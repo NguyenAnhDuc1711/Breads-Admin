@@ -33,6 +33,17 @@ const unwrap = (data: unknown) =>
     ? (data as any).metadata
     : data;
 
+// No dedicated /admin/login exists — an unauthenticated admin falls back to
+// the main site's login page. Guarded so concurrent failed queries (e.g.
+// getCurrentUser + getUsersWithStatus both firing on mount) only redirect
+// once instead of re-assigning location.href per failure.
+let redirecting = false;
+const redirectToLogin = () => {
+  if (redirecting) return;
+  redirecting = true;
+  window.location.href = "/login";
+};
+
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
   unknown,
@@ -46,17 +57,19 @@ const baseQueryWithReauth: BaseQueryFn<
   const url = typeof args === "string" ? args : args.url;
   const isRefreshCall = url.includes(USER_PATH.REFRESH_TOKEN);
 
-  if (
-    error?.status === 401 &&
-    error.data?.code === "TOKEN_EXPIRED" &&
-    !isRefreshCall
-  ) {
-    try {
-      await ensureFreshAccessToken(refreshUrl);
-      result = await rawBaseQuery(args, api, extraOptions);
-    } catch {
-      setAccessToken(null);
-      window.location.href = "/login";
+  if (error?.status === 401 && !isRefreshCall) {
+    if (error.data?.code === "TOKEN_EXPIRED") {
+      try {
+        await ensureFreshAccessToken(refreshUrl);
+        result = await rawBaseQuery(args, api, extraOptions);
+      } catch {
+        setAccessToken(null);
+        redirectToLogin();
+      }
+    } else {
+      // No refreshToken/access token at all — genuinely not logged in,
+      // nothing to refresh.
+      redirectToLogin();
     }
   }
 
