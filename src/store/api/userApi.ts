@@ -19,11 +19,35 @@ export interface UpdateUserStatusArgs {
   status: number;
 }
 
+export interface LoginArgs {
+  email: string;
+  password: string;
+}
+
+export interface LoginResult extends IUser {
+  accessToken: string;
+}
+
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getCurrentUser: builder.query<IUser, void>({
       query: () => ({ url: Route.USER + USER_PATH.ME }),
       providesTags: ["User"],
+    }),
+    login: builder.mutation<LoginResult, LoginArgs>({
+      query: (payload) => ({
+        url: Route.USER + USER_PATH.LOGIN,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["User"],
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: Route.USER + USER_PATH.LOGOUT,
+        method: "POST",
+      }),
+      invalidatesTags: ["User"],
     }),
     getUsersWithStatus: builder.query<
       UsersWithStatusResult,
@@ -48,6 +72,8 @@ export const userApi = api.injectEndpoints({
 
 export const {
   useGetCurrentUserQuery,
+  useLoginMutation,
+  useLogoutMutation,
   useGetUsersWithStatusQuery,
   useUpdateUserStatusMutation,
 } = userApi;
