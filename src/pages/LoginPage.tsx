@@ -18,7 +18,11 @@ const LoginPage = () => {
     setError(null);
     try {
       const result = await login({ email, password }).unwrap();
-      if (result.role !== Constants.USER_ROLE.ADMIN) {
+      const allowedLoginRoles: number[] = [
+        Constants.USER_ROLE.ADMIN,
+        Constants.USER_ROLE.MODERATOR,
+      ];
+      if (!allowedLoginRoles.includes(result.role)) {
         // Login already set a valid refreshToken cookie server-side — undo
         // it, this account has no business holding an admin session.
         await logout();
@@ -26,7 +30,10 @@ const LoginPage = () => {
         return;
       }
       setAccessToken(result.accessToken);
-      navigate("/users");
+      // "/" (Overview) thay vì "/users" — Users giờ chỉ dành ADMIN
+      // (xem src/config/routes.ts), Moderator vào "/users" sẽ bị AdminLayout
+      // đá ngược lại /login ngay lập tức nếu điều hướng tới đó.
+      navigate("/");
     } catch {
       setError("Email hoặc mật khẩu không đúng.");
     }

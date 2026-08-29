@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Constants } from "@/Breads-Shared/Constants";
-import PaginationBtn from "@/components/PaginationBtn";
+import type { IUser } from "@/Breads-Shared/Types";
+import SearchableTable, {
+  type SearchableTableColumn,
+} from "@/components/SearchableTable";
 import useDebounce from "@/hooks/useDebounce";
 import {
   useGetCurrentUserQuery,
@@ -10,7 +13,6 @@ import {
 import "./UsersPage.css";
 
 const ROWS_PER_PAGE = 7;
-const TABLE_COLUMNS = ["name", "username", "avatar", "status", "action"];
 
 const convertUserStatus = (status: number) => {
   const { ACTIVE, INACTIVE, LOCK, BANNED } = Constants.USER_STATUS;
@@ -47,143 +49,102 @@ const UsersPage = () => {
 
   const totalPages = Math.ceil((data?.count ?? 0) / ROWS_PER_PAGE);
 
-  return (
-    <div className="container-fluid">
-      <div className="my-2">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search..."
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value);
-            setCurrentPage(1);
+  const columns: SearchableTableColumn<IUser>[] = [
+    {
+      key: "name",
+      header: "name",
+      cellStyle: { minWidth: "120px", maxWidth: "25%" },
+      render: (user) => (
+        <span className="users-page__truncate">{user.name}</span>
+      ),
+    },
+    {
+      key: "username",
+      header: "username",
+      cellStyle: { minWidth: "120px", maxWidth: "20%" },
+      render: (user) => (
+        <span className="users-page__truncate">{user.username}</span>
+      ),
+    },
+    {
+      key: "avatar",
+      header: "avatar",
+      cellStyle: { minWidth: "80px", width: "15%" },
+      render: (user) => (
+        <img
+          src={user.avatar}
+          width={60}
+          height={60}
+          style={{
+            objectFit: "cover",
+            borderRadius: "8px",
+            cursor: "pointer",
           }}
+          alt={user.username ? `${user.username}'s avatar` : "User avatar"}
         />
-      </div>
-      <div className="users-page__table-wrap">
-        <table className="table table-striped table-bordered table-responsive">
-          <thead
-            className="thead-dark"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 1,
-              backgroundColor: "white",
-            }}
-          >
-            <tr>
-              {TABLE_COLUMNS.map((col) => (
-                <th
-                  key={col}
-                  style={{
-                    textTransform: "capitalize",
-                    whiteSpace: "nowrap",
-                    padding: "12px 16px",
-                  }}
-                >
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {isFetching ? (
-              <tr>
-                <td colSpan={TABLE_COLUMNS.length} className="text-center">
-                  Loading...
-                </td>
-              </tr>
-            ) : data?.users && data.users.length > 0 ? (
-              data.users.map((user) => (
-                <tr key={user._id}>
-                  <td style={{ minWidth: "120px", maxWidth: "25%" }}>
-                    <span className="users-page__truncate">{user.name}</span>
-                  </td>
-                  <td style={{ minWidth: "120px", maxWidth: "20%" }}>
-                    <span className="users-page__truncate">
-                      {user.username}
-                    </span>
-                  </td>
-                  <td style={{ minWidth: "80px", width: "15%" }}>
-                    <img
-                      src={user.avatar}
-                      width={60}
-                      height={60}
-                      style={{
-                        objectFit: "cover",
-                        borderRadius: "8px",
-                        cursor: "pointer",
-                      }}
-                      alt={
-                        user.username
-                          ? `${user.username}'s avatar`
-                          : "User avatar"
-                      }
-                    />
-                  </td>
-                  <td style={{ minWidth: "100px", width: "20%" }}>
-                    <select
-                      defaultValue={user.status}
-                      onChange={(e) =>
-                        updateUserStatus({
-                          userId: user._id,
-                          status: Number(e.target.value),
-                        })
-                      }
-                      style={{
-                        backgroundColor: "white",
-                        width: "100%",
-                        padding: "6px",
-                        borderRadius: "4px",
-                        border: "1px solid #ced4da",
-                      }}
-                    >
-                      {Object.values(Constants.USER_STATUS).map((status) => (
-                        <option key={status} value={status}>
-                          {convertUserStatus(status)}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td
-                    style={{
-                      minWidth: "120px",
-                      width: "20%",
-                      textAlign: "center",
-                    }}
-                  >
-                    <button
-                      className="btn btn-sm btn-dark"
-                      onClick={() => {
-                        window.location.href = `/users/${user._id}`;
-                      }}
-                    >
-                      See detail
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={TABLE_COLUMNS.length} className="text-center">
-                  No matching data found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      {totalPages > 1 && (
-        <nav className="d-flex justify-content-center mt-3">
-          <PaginationBtn
-            totalPages={totalPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-        </nav>
-      )}
-    </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "status",
+      cellStyle: { minWidth: "100px", width: "20%" },
+      render: (user) => (
+        <select
+          defaultValue={user.status}
+          onChange={(e) =>
+            updateUserStatus({
+              userId: user._id,
+              status: Number(e.target.value),
+            })
+          }
+          style={{
+            backgroundColor: "white",
+            width: "100%",
+            padding: "6px",
+            borderRadius: "4px",
+            border: "1px solid #ced4da",
+          }}
+        >
+          {Object.values(Constants.USER_STATUS).map((status) => (
+            <option key={status} value={status}>
+              {convertUserStatus(status)}
+            </option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      key: "action",
+      header: "action",
+      cellStyle: { minWidth: "120px", width: "20%", textAlign: "center" },
+      render: (user) => (
+        <button
+          className="btn btn-sm btn-dark"
+          onClick={() => {
+            window.location.href = `/users/${user._id}`;
+          }}
+        >
+          See detail
+        </button>
+      ),
+    },
+  ];
+
+  return (
+    <SearchableTable
+      columns={columns}
+      data={data?.users ?? []}
+      rowKey={(user) => user._id}
+      loading={isFetching}
+      searchValue={searchValue}
+      onSearchChange={(value) => {
+        setSearchValue(value);
+        setCurrentPage(1);
+      }}
+      currentPage={currentPage}
+      totalPages={totalPages}
+      setCurrentPage={setCurrentPage}
+    />
   );
 };
 

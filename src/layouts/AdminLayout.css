@@ -1,0 +1,40 @@
+.admin-layout {
+  min-height: 100vh;
+}
+
+.admin-layout__sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background-color: #212529;
+  color: #fff;
+  min-height: 100vh;
+  padding: 1rem 0;
+}
+
+.admin-layout__brand {
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem 1rem;
+}
+
+.admin-layout__link {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #adb5bd;
+  text-decoration: none;
+}
+
+.admin-layout__link:hover {
+  color: #fff;
+  background-color: #343a40;
+}
+
+.admin-layout__link--active {
+  color: #fff;
+  background-color: #343a40;
+  border-left: 3px solid #0d6efd;
+}
+
+.admin-layout__content {
+  min-width: 0;
+}
