@@ -1,23 +1,21 @@
-# Handoff: Task #3
+# Handoff: Task #5
 
 ## What Was Done
-Tạo `src/layouts/AdminLayout.tsx` + `AdminLayout.css` (sidebar tĩnh 5 mục, `<Outlet/>`, chưa có role-guard — dành cho task #6). Tạo `src/pages/ComingSoonPage.tsx` (placeholder tái dùng cho 4 route chưa có nội dung). Sửa `App.tsx`: xoá redirect `/`→`/users` cũ, mount route lồng nhau dưới `AdminLayout` cho cả 5 route (`/`, `/posts`, `/posts/validation`, `/report`, `/users`).
+Tạo `src/components/SearchableTable/index.tsx` (props: `columns`, `data`, `rowKey`, `loading`, `searchValue`/`onSearchChange`, `currentPage`/`totalPages`/`setCurrentPage`, `emptyMessage?`). Refactor `UsersPage.tsx` để dùng component này, giữ nguyên 100% logic (state, debounce, RTK Query hooks, cell markup). Thêm `Post`, `Report` vào `tagTypes` của `baseApi.ts`.
 
 ## Decisions Made
-- Dùng 1 `ComingSoonPage` component chung (nhận prop `title`) cho cả Overview lẫn 3 route placeholder khác, thay vì tạo `OverviewPlaceholder` riêng như phác thảo ban đầu trong task file — không có khác biệt nội dung nào giữa chúng ở giai đoạn này, tạo 2 component trùng lặp không cần thiết.
-- Sidebar dùng `NavLink` với `end` prop cho route `/` (tránh active-state dính vào mọi route con).
+- Thêm 1 field `cellStyle?: CSSProperties` vào `SearchableTableColumn` (không có trong phác thảo ban đầu ở task file) — cần thiết để giữ đúng width/textAlign vốn nằm ở cấp `<td>` trong bản gốc `UsersPage.tsx`; không thêm field này sẽ làm lệch layout cột so với bản gốc, vi phạm NFR-1 (không regression). Vẫn đúng tinh thần AD-4 (tối giản, chỉ thêm field UsersPage THẬT SỰ cần).
+- `setCurrentPage` truyền thẳng `Dispatch<SetStateAction<number>>` (không bọc qua `onPageChange(page)`) — khớp đúng signature `PaginationBtn` đang cần (`(updater: (prev:number)=>number) => void`), tránh phải viết wrapper thừa.
 
 ## Files Changed
-- `src/layouts/AdminLayout.tsx` (mới)
-- `src/layouts/AdminLayout.css` (mới)
-- `src/pages/ComingSoonPage.tsx` (mới)
-- `src/App.tsx` (sửa)
+- `src/components/SearchableTable/index.tsx` (mới)
+- `src/pages/UsersPage.tsx` (refactor, hành vi giữ nguyên)
+- `src/store/api/baseApi.ts` (tagTypes mở rộng)
 
 ## Verification Done
-- `npm run build` pass, `npm run lint` pass.
-- Kiểm tra trực tiếp qua trình duyệt (Chrome, dev server cổng 5174): `/` hiện Overview placeholder (không redirect `/users` nữa), `/posts` hiện Posts placeholder, `/users` hiện `UsersPage` nguyên trạng (bảng đúng 5 cột, chỉ "No matching data found" vì không có Be chạy local — không phải lỗi của thay đổi này). Sidebar active-state đúng theo route.
-- Đã tắt dev server sau khi test xong (`pkill -f vite` — có thể đã tắt cả dev server khác nếu bạn đang chạy song song, chạy lại `npm run dev` nếu cần).
+- `npm run build` + `npm run lint` pass.
+- Test trực tiếp trên trình duyệt với Be thật đang chạy (không phải mock): bảng load đúng data thật, search "ethan" debounce đúng rồi trả 3 kết quả đúng, avatar/status dropdown/nút "See detail" hiển thị đúng như bản gốc, phân trang hiển thị đúng.
 
 ## Warnings for Next Task
-- Task #6 (FE route-guard) sẽ thêm logic vào chính `AdminLayout.tsx` — không cần đổi lại cấu trúc route, chỉ chèn guard trước `<Outlet/>`.
-- Task #5 (SearchableTable) sẽ sửa `UsersPage.tsx` — route `/users` không đổi, an toàn để refactor nội dung bên trong.
+- Task #6 (route-guard) không chạm file nào của task này — an toàn song song.
+- `SearchableTable` chưa được dùng ở đâu khác ngoài `UsersPage` — khi build Posts CMS (epic sau), rất có thể cần thêm field vào `SearchableTableColumn` (vd: custom header render) — đã lường trước ở AD-4/Risk #4 của epic, không phải bất ngờ.
