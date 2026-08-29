@@ -1,11 +1,11 @@
 ---
 name: "social-media-management"
 description: "Khung điều hướng + phân quyền cho hệ thống quản trị mạng xã hội Breads trong Breads-Admin"
-status: "backlog"
+status: "complete"
 priority: "high"
 scale: "medium"
 created: "2026-08-29T07:23:26Z"
-updated: "2026-08-29T07:25:28Z"
+updated: "2026-08-29T08:30:17Z"
 ---
 
 ## Executive Summary
