@@ -1,26 +1,24 @@
-# Handoff: Task #4
+# Handoff: Task #6
 
 ## What Was Done
-Tạo `src/api/middlewares/requireRole.ts` (Breads-Be) với 2 export: `requireRole(...roles)` (role-check thuần) và `requireSelfOrRole(...roles)` (cho qua nếu tự thao tác trên chính mình HOẶC đủ role — dùng cho endpoint dùng chung). Wire vào 7 endpoint theo đúng bảng role-mapping FR-5, cộng 1 fix ngoài dự kiến (xem Scope Addendum trong task file).
+Tạo `src/config/routes.ts` (`ROUTE_ROLES` map, comment cross-reference tới bảng FR-5). Thêm role-guard vào `AdminLayout.tsx`: đọc `currentUser` qua `useGetCurrentUserQuery`, chờ `isLoading` xong mới quyết định (không flash-redirect), default-deny khi role không hợp lệ/không có trong danh sách, `<Navigate to="/login" replace/>` khi thiếu quyền, lọc sidebar chỉ hiện mục role được phép. Sửa `LoginPage.tsx`: chấp nhận cả ADMIN và MODERATOR đăng nhập.
 
 ## Decisions Made
-- Phát hiện `PUT /users/:id` là endpoint dùng chung (tự sửa hồ sơ + admin đổi status) — đã dừng lại xin xác nhận user trước khi mở rộng scope, thêm `requireSelfOrRole` thay vì `requireRole` thuần cho riêng endpoint này.
-- Sửa luôn bug có sẵn ở `user.controller.ts::updateUser` (check tự-so-sánh-chính-mình vô nghĩa, không bao giờ chặn) — xoá hẳn thay vì sửa, vì `requireSelfOrRole` middleware giờ là nguồn xác thực quyền duy nhất, controller không cần tự kiểm tra lại.
-- Đã xác nhận (đọc code Breads-Fe `config/API.ts`) axios interceptor tự gắn `Authorization` header cho MỌI request khi có `accessToken` — nên thêm `protectRoute` vào 5 endpoint trước đây không có sẽ KHÔNG phá client hiện tại của Breads-Fe (đã dùng token sẵn vì các trang admin đó vốn đã yêu cầu login).
+- **Phát hiện + fix thêm ngoài mô tả gốc của task:** sau khi đổi Users thành ADMIN-only, `navigate("/users")` sau login thành công (code cũ) sẽ khiến Moderator đăng nhập xong bị AdminLayout đá ngược lại `/login` ngay lập tức — vòng lặp khó hiểu. Đổi target thành `navigate("/")` (Overview, cả 2 role đều vào được).
+- `isLoading` check trả `null` (không render gì) thay vì spinner — chấp nhận được vì thời gian loading rất ngắn (query đã cache từ trước ở hầu hết trường hợp), không cần thêm UI mới ngoài scope.
 
-## Files Changed (repo Breads-Be)
-- `src/api/middlewares/requireRole.ts` (mới)
-- `src/api/routers/user.route.ts` (thêm `requireRole`/`requireSelfOrRole` cho 2 endpoint)
-- `src/api/routers/post.route.ts` (thêm `protectRoute`+`requireRole` cho 2 endpoint)
-- `src/api/routers/report.route.ts` (thêm `protectRoute`+`requireRole` cho 3 endpoint)
-- `src/api/controllers/user.controller.ts` (xoá check tự-so-sánh bị lỗi trong `updateUser`)
+## Files Changed
+- `src/config/routes.ts` (mới)
+- `src/layouts/AdminLayout.tsx` (thêm guard logic)
+- `src/pages/LoginPage.tsx` (mở rộng role được chấp nhận + sửa target điều hướng)
 
 ## Verification Done
-- `npx tsc --noEmit` — 2 lỗi pre-existing không liên quan (unused var ở dòng 24/531, không đụng tới code mới) — 0 lỗi mới.
-- **Không chạy được** `npm test` đầy đủ — nhiều file test trong repo import router thật, kéo theo kết nối Redis lúc import (`services/feed/queue.ts` mở `new Redis()` ngay khi module load); Redis không chạy trong môi trường này → treo event loop, không bao giờ exit (đã xác nhận qua comment trong chính `post.route.test.ts`, đây là giới hạn môi trường có sẵn, không phải do thay đổi của task này).
-- Verify thay thế: (1) đọc lại source 3 router file, xác nhận `protectRoute` luôn đứng NGAY TRƯỚC `requireRole`/`requireSelfOrRole` ở cả 7 endpoint (đúng NFR-2). (2) Server dev thật (`tsx watch src/server.ts`, đã chạy sẵn từ trước, hot-reload tự động) — curl trực tiếp cả 4 endpoint từng thiếu auth, KHÔNG kèm token: cả 4 đều trả **401** (trước đây sẽ trả 200/lộ dữ liệu). Server không crash sau reload.
-- **Chưa verify được** case 403 (role hợp lệ nhưng không đủ quyền) bằng request thật — thiếu tài khoản test có token role USER/MODERATOR sẵn có trong phiên này. Logic đã type-check sạch và khớp đúng pattern `protectRoute.ts`, nhưng đây là phần CẦN kiểm tra thủ công thêm ở bước epic-verify (090) trước khi coi epic hoàn thành.
+- `npm run build` + `npm run lint` pass.
+- Test trực tiếp trên trình duyệt với session ADMIN thật đang có sẵn: vào `/users` vẫn hoạt động bình thường, sidebar hiện đủ 5 mục (đúng vì role ADMIN được phép mọi route) — xác nhận happy path ADMIN không bị regression.
+
+## Chưa verify được (cần epic-verify #7 xác nhận thêm)
+- **Chưa có tài khoản test role Moderator thật** trong phiên này để verify trực tiếp: (a) Moderator đăng nhập thành công, (b) sidebar ẩn mục "Users" với Moderator, (c) Moderator gõ thẳng URL `/users` bị đá về `/login`. Logic đã type-check sạch, đúng theo AC đã viết trong task file, nhưng đây là phần cần 1 tài khoản Moderator thật để xác nhận runtime — cần tạo trước khi chạy #7.
+- Case "role không hợp lệ/undefined → default-deny" cũng chưa test runtime được vì lý do tương tự.
 
 ## Warnings for Next Task
-- Task #6 (FE route-guard) không phụ thuộc trực tiếp vào code Be này để build, nhưng cần Be đã chạy đúng để test end-to-end thật.
-- **Việc còn thiếu, phải làm ở #7 (Verification):** test case 403 thật cho cả 7 endpoint bằng token role không đủ — chưa được verify trong task này, chỉ mới verify được 401 (chưa đăng nhập).
+- #7 (Verification) cần: tạo ít nhất 1 tài khoản test role MODERATOR (update trực tiếp DB hoặc qua 1 script) trước khi chạy checklist đầy đủ — nếu không có, phần SC-5/SC-6 của PRD không thể verify runtime được, chỉ verify được qua đọc code.
