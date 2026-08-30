@@ -21,7 +21,18 @@ const AdminLayout = () => {
     return null;
   }
 
-  const allowedRoles = ROUTE_ROLES[location.pathname];
+  // Ưu tiên khớp tuyệt đối; nếu không có, dùng tiền tố dài nhất — route con dạng
+  // "/users/:id" không có key riêng trong ROUTE_ROLES, dùng chung quyền của route
+  // cha đã khai báo (vd. "/users").
+  const matchedRouteKey =
+    location.pathname in ROUTE_ROLES
+      ? location.pathname
+      : Object.keys(ROUTE_ROLES)
+          .filter((key) => key !== "/" && location.pathname.startsWith(`${key}/`))
+          .sort((a, b) => b.length - a.length)[0];
+  const allowedRoles = matchedRouteKey
+    ? ROUTE_ROLES[matchedRouteKey]
+    : undefined;
   // Default-deny: role không nằm trong danh sách cho phép — kể cả
   // currentUser/role không tồn tại — luôn bị coi là không đủ quyền.
   const hasAccess =

@@ -1,0 +1,314 @@
+/* DateRangePicker Modern Popover Styling */
+.date-range-picker {
+  position: relative;
+  display: inline-block;
+}
+
+/* Trigger Button */
+.date-range-picker__trigger {
+  height: 36px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 0.25rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.825rem;
+  color: #334155;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+}
+
+.date-range-picker__trigger:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+.date-range-picker__trigger--active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background-color: #ffffff;
+}
+
+.date-range-picker__trigger--has-value {
+  color: #0f172a;
+  font-weight: 500;
+  border-color: #93c5fd;
+  background-color: #f0f7ff;
+}
+
+.date-range-picker__icon {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.date-range-picker__clear-btn {
+  background: none;
+  border: none;
+  padding: 0.15rem;
+  margin-left: 0.2rem;
+  border-radius: 50%;
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.date-range-picker__clear-btn:hover {
+  color: #ef4444;
+  background: #fee2e2;
+}
+
+/* Popover Card */
+.date-range-picker__popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 1050;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  overflow: hidden;
+  max-width: calc(100vw - 24px);
+  animation: pickerPop 0.15s ease-out;
+}
+
+.date-range-picker__popover--align-right {
+  left: auto;
+  right: 0;
+}
+
+@media (max-width: 480px) {
+  .date-range-picker__popover {
+    flex-direction: column;
+    max-width: 300px;
+  }
+  .date-range-picker__sidebar {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e2e8f0;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.2rem;
+    padding: 0.35rem !important;
+  }
+  .date-range-picker__preset-btn {
+    padding: 0.3rem !important;
+    font-size: 0.725rem !important;
+    text-align: center !important;
+  }
+  .date-range-picker__calendar-wrap {
+    width: 100% !important;
+    padding: 0.5rem !important;
+  }
+}
+
+@keyframes pickerPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Presets Sidebar */
+.date-range-picker__sidebar {
+  width: 130px;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.date-range-picker__preset-btn {
+  border: none;
+  background: transparent;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.775rem;
+  font-weight: 500;
+  color: #475569;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.date-range-picker__preset-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.date-range-picker__preset-btn--active {
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.date-range-picker__preset-btn--active:hover {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+/* Calendar Section */
+.date-range-picker__calendar-wrap {
+  padding: 0.75rem 1rem;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Calendar Header */
+.date-range-picker__cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+}
+
+.date-range-picker__month-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.date-range-picker__nav-btn {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.date-range-picker__nav-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Grid */
+.date-range-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.date-range-picker__weekday {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+  padding: 0.35rem 0;
+  text-transform: uppercase;
+}
+
+.date-range-picker__day-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.775rem;
+  color: #334155;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  transition: all 0.1s ease;
+}
+
+.date-range-picker__day-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.date-range-picker__day-btn--dimmed {
+  color: #cbd5e1;
+}
+
+.date-range-picker__day-btn--in-range {
+  background: #eff6ff !important;
+  color: #1d4ed8;
+  border-radius: 0;
+}
+
+.date-range-picker__day-btn--range-start {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-top-left-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.date-range-picker__day-btn--range-end {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-top-right-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.date-range-picker__day-btn--range-single {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 6px !important;
+}
+
+.date-range-picker__day-btn--today::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background: #2563eb;
+  border-radius: 50%;
+}
+
+.date-range-picker__day-btn--range-start::after,
+.date-range-picker__day-btn--range-end::after,
+.date-range-picker__day-btn--range-single::after {
+  background: #ffffff;
+}
+
+/* Footer */
+.date-range-picker__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.65rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.date-range-picker__hint {
+  font-size: 0.725rem;
+  color: #64748b;
+}
+
+.date-range-picker__actions {
+  display: flex;
+  gap: 0.4rem;
+}

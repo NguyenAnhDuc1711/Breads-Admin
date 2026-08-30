@@ -12,11 +12,17 @@ export interface GetUsersWithStatusArgs {
   page: number;
   limit: number;
   searchValue?: string;
+  role?: number;
+  status?: number;
+  dateFrom?: string;
+  dateTo?: string;
 }
 
-export interface UpdateUserStatusArgs {
+export interface AdminUpdateUserArgs {
   userId: string;
-  status: number;
+  role?: number;
+  status?: number;
+  reason?: string;
 }
 
 export interface LoginArgs {
@@ -53,17 +59,32 @@ export const userApi = api.injectEndpoints({
       UsersWithStatusResult,
       GetUsersWithStatusArgs
     >({
-      query: ({ userId, page, limit, searchValue }) => ({
+      query: ({
+        userId,
+        page,
+        limit,
+        searchValue,
+        role,
+        status,
+        dateFrom,
+        dateTo,
+      }) => ({
         url: Route.USER + USER_PATH.GET_USERS_WITH_STATUS,
-        params: { userId, page, limit, searchValue },
+        params: { userId, page, limit, searchValue, role, status, dateFrom, dateTo },
       }),
       providesTags: ["User"],
     }),
-    updateUserStatus: builder.mutation<IUser, UpdateUserStatusArgs>({
-      query: ({ userId, status }) => ({
-        url: Route.USER + USER_PATH.UPDATE.replace(":id", userId),
+    getUserAdminDetail: builder.query<IUser, string>({
+      query: (userId) => ({
+        url: Route.USER + USER_PATH.ADMIN_DETAIL.replace(":id", userId),
+      }),
+      providesTags: ["User"],
+    }),
+    adminUpdateUser: builder.mutation<IUser, AdminUpdateUserArgs>({
+      query: ({ userId, role, status, reason }) => ({
+        url: Route.USER + USER_PATH.ADMIN_ACTION.replace(":id", userId),
         method: "PUT",
-        body: { status },
+        body: { role, status, reason },
       }),
       invalidatesTags: ["User"],
     }),
@@ -75,5 +96,7 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useGetUsersWithStatusQuery,
-  useUpdateUserStatusMutation,
+  useLazyGetUsersWithStatusQuery,
+  useGetUserAdminDetailQuery,
+  useAdminUpdateUserMutation,
 } = userApi;

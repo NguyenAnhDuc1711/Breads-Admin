@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout";
 import ComingSoonPage from "./pages/ComingSoonPage";
 import LoginPage from "./pages/LoginPage";
+import UserDetailPage from "./pages/UserDetailPage";
 import UsersPage from "./pages/UsersPage";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         />
         <Route path="/report" element={<ComingSoonPage title="Report" />} />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/users/:id" element={<UserDetailPage />} />
       </Route>
     </Routes>
   );
