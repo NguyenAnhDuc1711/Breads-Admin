@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.ccpm
+.claude
+skill
+*.md
+.env
+.env.local

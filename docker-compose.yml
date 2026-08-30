@@ -1,0 +1,12 @@
+services:
+  breads-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+        BASE_PATH: ${BASE_PATH:-/}
+    container_name: breads-admin
+    restart: always
+    ports:
+      - "8081:80"
