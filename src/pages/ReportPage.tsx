@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiSearch, FiX, FiClock, FiPaperclip, FiMail, FiXCircle } from "react-icons/fi";
 import PaginationBtn from "@/components/PaginationBtn";
+import ReportRespondModal from "@/components/ReportRespondModal";
 import useDebounce from "@/hooks/useDebounce";
 import { useGetCurrentUserQuery } from "@/store/api/userApi";
 import {
@@ -21,7 +22,6 @@ const ReportPage = () => {
   // selectedReport is consumed by task #21 (ReportRespondModal, not yet built) — kept here
   // so the Respond action can wire straight into it once that component lands.
   const [selectedReport, setSelectedReport] = useState<IReportQueueItem | null>(null);
-  void selectedReport;
 
   const {
     data: result,
@@ -315,7 +315,7 @@ const ReportPage = () => {
         </div>
       </div>
 
-      {/* selectedReport state is wired for task #21 (ReportRespondModal) to consume */}
+      <ReportRespondModal report={selectedReport} onClose={() => setSelectedReport(null)} />
     </div>
   );
 };
