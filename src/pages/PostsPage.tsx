@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { FiRotateCcw } from "react-icons/fi";
+import { FiEye, FiRotateCcw } from "react-icons/fi";
 import { Constants } from "@/Breads-Shared/Constants";
 import type { IPost } from "@/Breads-Shared/Types";
 import CustomDropdown, { type DropdownOption } from "@/components/CustomDropdown";
 import DateRangePicker from "@/components/DateRangePicker";
+import PostDetailModal from "@/components/PostDetailModal";
 import SearchableTable, {
   type SearchableTableColumn,
 } from "@/components/SearchableTable";
@@ -55,6 +56,7 @@ const PostsPage = () => {
   const [postTypeFilter, setPostTypeFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
   const { data: currentUser } = useGetCurrentUserQuery();
   const {
@@ -227,6 +229,22 @@ const PostsPage = () => {
           </span>
         ),
       },
+      {
+        key: "actions",
+        header: "",
+        cellStyle: { textAlign: "right" },
+        render: (post) => (
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+            onClick={() => setSelectedPost(post)}
+            title="View full post"
+          >
+            <FiEye size={13} />
+            <span>View</span>
+          </button>
+        ),
+      },
     ],
     [currentUser, updatePostStatus],
   );
@@ -299,6 +317,8 @@ const PostsPage = () => {
         setCurrentPage={setCurrentPage}
         emptyMessage="Không có bài viết nào khớp bộ lọc."
       />
+
+      <PostDetailModal post={selectedPost} onClose={() => setSelectedPost(null)} />
     </div>
   );
 };

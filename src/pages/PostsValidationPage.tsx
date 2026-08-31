@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
+import { FiEye } from "react-icons/fi";
 import { Constants } from "@/Breads-Shared/Constants";
 import type { IPost } from "@/Breads-Shared/Types";
+import PostDetailModal from "@/components/PostDetailModal";
 import SearchableTable, {
   type SearchableTableColumn,
 } from "@/components/SearchableTable";
@@ -24,6 +26,7 @@ const PostsValidationPage = () => {
   const [selectedAuthorLabel, setSelectedAuthorLabel] = useState("");
   const [authorSearchTerm, setAuthorSearchTerm] = useState("");
   const debouncedAuthorSearchTerm = useDebounce(authorSearchTerm);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
   const { data: authorResults, isFetching: isSearchingAuthors } =
     useGetUsersPendingPostQuery(
@@ -119,6 +122,14 @@ const PostsValidationPage = () => {
         cellStyle: { textAlign: "right", whiteSpace: "nowrap" },
         render: (post) => (
           <div className="d-flex gap-2 justify-content-end">
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-secondary"
+              onClick={() => setSelectedPost(post)}
+              title="View full post"
+            >
+              <FiEye size={13} />
+            </button>
             <button
               type="button"
               className="btn btn-sm btn-outline-success"
@@ -228,6 +239,8 @@ const PostsValidationPage = () => {
         setCurrentPage={setCurrentPage}
         emptyMessage="No posts pending validation."
       />
+
+      <PostDetailModal post={selectedPost} onClose={() => setSelectedPost(null)} />
     </div>
   );
 };
