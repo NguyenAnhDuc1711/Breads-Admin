@@ -8,8 +8,17 @@ export interface GetPostsArgs {
   user?: string; // authorId, filter.user
   postContent?: string[]; // filter.postContent
   postType?: string[]; // filter.postType
+  dateFrom?: string; // filter.dateFrom (ISO date string)
+  dateTo?: string; // filter.dateTo (ISO date string)
   page: number;
   limit: number;
+}
+
+// BE trả {data, totalCount} CHỈ cho 2 trang admin (post.controller.ts getPosts) — mọi
+// filterPage khác (không dùng trong Admin panel) vẫn là mảng thô, không đi qua type này.
+export interface GetPostsResult {
+  data: IPost[];
+  totalCount: number;
 }
 
 export interface UpdatePostStatusArgs {
@@ -20,8 +29,18 @@ export interface UpdatePostStatusArgs {
 
 export const postApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getPosts: builder.query<IPost[], GetPostsArgs>({
-      query: ({ userId, filterPage, user, postContent, postType, page, limit }) => ({
+    getPosts: builder.query<GetPostsResult, GetPostsArgs>({
+      query: ({
+        userId,
+        filterPage,
+        user,
+        postContent,
+        postType,
+        dateFrom,
+        dateTo,
+        page,
+        limit,
+      }) => ({
         url: Route.POST + POST_PATH.GET_ALL,
         params: {
           userId,
@@ -31,6 +50,8 @@ export const postApi = api.injectEndpoints({
           ...(user !== undefined ? { "filter[user]": user } : {}),
           ...(postContent?.length ? { "filter[postContent]": postContent } : {}),
           ...(postType?.length ? { "filter[postType]": postType } : {}),
+          ...(dateFrom ? { "filter[dateFrom]": dateFrom } : {}),
+          ...(dateTo ? { "filter[dateTo]": dateTo } : {}),
         },
       }),
       providesTags: ["Post"],

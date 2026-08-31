@@ -32,7 +32,7 @@ const PostsValidationPage = () => {
     );
 
   const {
-    data: posts,
+    data: result,
     isFetching,
     isError,
   } = useGetPostsQuery(
@@ -45,6 +45,7 @@ const PostsValidationPage = () => {
     },
     { skip: !currentUser },
   );
+  const posts = result?.data;
 
   const [updatePostStatus] = useUpdatePostStatusMutation();
 
@@ -140,10 +141,9 @@ const PostsValidationPage = () => {
     [currentUser],
   );
 
-  // BE trả về mảng post cho trang hiện tại, KHÔNG kèm tổng số bản ghi -> ước lượng
-  // totalPages: còn nguyên 1 trang đầy => có thể còn trang kế tiếp.
-  const totalPages =
-    (posts?.length ?? 0) === ROWS_PER_PAGE ? currentPage + 1 : currentPage;
+  // Bug fix: trước đây ước lượng totalPages từng nấc một (currentPage+1 khi trang đầy) khiến
+  // pagination chỉ hiện thêm trang mỗi lần bấm next. Giờ BE trả totalCount thật.
+  const totalPages = Math.max(1, Math.ceil((result?.totalCount ?? 0) / ROWS_PER_PAGE));
 
   return (
     <div className="container-fluid py-3">

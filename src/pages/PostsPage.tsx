@@ -58,7 +58,7 @@ const PostsPage = () => {
 
   const { data: currentUser } = useGetCurrentUserQuery();
   const {
-    data: posts,
+    data: result,
     isFetching,
     isError,
   } = useGetPostsQuery(
@@ -67,11 +67,14 @@ const PostsPage = () => {
       filterPage: FILTER_PAGE,
       postContent: contentTypeFilter ? [contentTypeFilter] : undefined,
       postType: postTypeFilter ? [postTypeFilter] : undefined,
+      dateFrom: dateFrom || undefined,
+      dateTo: dateTo || undefined,
       page: currentPage,
       limit: ROWS_PER_PAGE,
     },
     { skip: !currentUser },
   );
+  const posts = result?.data;
   const [updatePostStatus] = useUpdatePostStatusMutation();
 
   const hasActiveFilters =
@@ -97,11 +100,10 @@ const PostsPage = () => {
       setCurrentPage(1);
     };
 
-  // getPosts trả IPost[] không kèm tổng số bản ghi (không có `count`) — suy ra totalPages
-  // theo kiểu "còn trang sau hay không": nhận đủ 1 trang (== ROWS_PER_PAGE) thì còn ít nhất
-  // 1 trang kế tiếp, ngược lại đây là trang cuối.
-  const totalPages =
-    (posts?.length ?? 0) < ROWS_PER_PAGE ? currentPage : currentPage + 1;
+  // Bug fix: trước đây ước lượng totalPages = currentPage+1 khi trang đầy — khiến pagination
+  // chỉ hiện thêm từng trang một mỗi lần bấm next thay vì đúng tổng ngay từ đầu. Giờ BE trả
+  // totalCount thật (post.controller.ts getPosts, chỉ cho 2 trang admin).
+  const totalPages = Math.max(1, Math.ceil((result?.totalCount ?? 0) / ROWS_PER_PAGE));
 
   // Không có search full-text ở tầng BE cho post (khác users) — lọc phía client trên
   // ĐÚNG trang đang tải (không phải toàn bộ dataset) theo content + username/name tác giả,

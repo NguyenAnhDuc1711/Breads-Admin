@@ -55,7 +55,10 @@ const AdminLayout = () => {
             <li key={item.path}>
               <NavLink
                 to={item.path}
-                end={item.path === "/"}
+                // "/" và "/posts" cần match tuyệt đối: "/posts" là tiền tố của route
+                // sibling "/posts/validation" (khác "/users" — "/users/:id" là SUB-PAGE
+                // hợp lệ của "/users" nên vẫn muốn giữ highlight tiền tố cho nó).
+                end={item.path === "/" || item.path === "/posts"}
                 className={({ isActive }) =>
                   `admin-layout__link${isActive ? " admin-layout__link--active" : ""}`
                 }
