@@ -130,14 +130,16 @@ const PostDetailModal = ({ post, onClose }: PostDetailModalProps) => {
             <span className="badge text-bg-light border text-capitalize">
               {post.type || "create"}
             </span>
+            {/* Status (PUBLIC=1) và Visibility (PUBLIC=0) là 2 thuộc tính độc lập, có thể
+                cùng là "Public" — không có tiền tố sẽ trông như hiển thị trùng lặp/lỗi. */}
             {post.status !== undefined && (
               <span className="badge text-bg-light border">
-                {STATUS_LABEL[post.status] ?? post.status}
+                Status: {STATUS_LABEL[post.status] ?? post.status}
               </span>
             )}
             {post.visibility !== undefined && (
               <span className="badge text-bg-light border">
-                {VISIBILITY_LABEL[post.visibility] ?? post.visibility}
+                Visibility: {VISIBILITY_LABEL[post.visibility] ?? post.visibility}
               </span>
             )}
           </div>
