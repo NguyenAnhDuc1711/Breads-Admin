@@ -103,6 +103,23 @@ const PostsPage = () => {
   const totalPages =
     (posts?.length ?? 0) < ROWS_PER_PAGE ? currentPage : currentPage + 1;
 
+  // Không có search full-text ở tầng BE cho post (khác users) — lọc phía client trên
+  // ĐÚNG trang đang tải (không phải toàn bộ dataset) theo content + username/name tác giả,
+  // để ô search không rơi vào tình trạng "hiện diện nhưng vô tác dụng" (phát hiện lúc verify).
+  const filteredPosts = useMemo(() => {
+    const list = posts ?? [];
+    const term = searchValue.trim().toLowerCase();
+    if (!term) return list;
+    return list.filter((post) => {
+      const haystacks = [
+        post.content,
+        post.authorInfo?.username,
+        post.authorInfo?.name,
+      ];
+      return haystacks.some((v) => v?.toLowerCase().includes(term));
+    });
+  }, [posts, searchValue]);
+
   const columns: SearchableTableColumn<IPost>[] = useMemo(
     () => [
       {
@@ -267,7 +284,7 @@ const PostsPage = () => {
 
       <SearchableTable
         columns={columns}
-        data={posts ?? []}
+        data={filteredPosts}
         rowKey={(p) => p._id!}
         loading={isFetching}
         error={

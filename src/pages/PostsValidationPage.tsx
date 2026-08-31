@@ -67,6 +67,16 @@ const PostsValidationPage = () => {
     updatePostStatus({ postId, userId: currentUser._id, status });
   };
 
+  // Không có search full-text ở tầng BE cho post — lọc phía client trên ĐÚNG trang đang
+  // tải theo content (ô search này khác `authorSearchTerm`, vốn dùng cho typeahead chọn
+  // tác giả ở trên), để ô search không rơi vào tình trạng "hiện diện nhưng vô tác dụng".
+  const filteredPosts = useMemo(() => {
+    const list = posts ?? [];
+    const term = searchValue.trim().toLowerCase();
+    if (!term) return list;
+    return list.filter((post) => post.content?.toLowerCase().includes(term));
+  }, [posts, searchValue]);
+
   const columns: SearchableTableColumn<IPost>[] = useMemo(
     () => [
       {
@@ -205,7 +215,7 @@ const PostsValidationPage = () => {
 
       <SearchableTable
         columns={columns}
-        data={posts ?? []}
+        data={filteredPosts}
         rowKey={(post) => post._id!}
         loading={isFetching}
         error={
