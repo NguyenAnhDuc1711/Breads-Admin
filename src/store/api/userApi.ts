@@ -34,6 +34,18 @@ export interface LoginResult extends IUser {
   accessToken: string;
 }
 
+export interface UserShortInfo {
+  _id: string;
+  username: string;
+  avatar?: string;
+}
+
+export interface GetUsersPendingPostArgs {
+  page: number;
+  limit: number;
+  searchValue?: string;
+}
+
 export const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getCurrentUser: builder.query<IUser, void>({
@@ -88,6 +100,13 @@ export const userApi = api.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getUsersPendingPost: builder.query<UserShortInfo[], GetUsersPendingPostArgs>({
+      query: (payload) => ({
+        url: Route.USER + USER_PATH.GET_USERS_PENDING_POST,
+        method: "POST",
+        body: payload, // KHÔNG kèm userId — danh tính lấy từ JWT (protectRoute ở BE)
+      }),
+    }),
   }),
 });
 
@@ -99,4 +118,6 @@ export const {
   useLazyGetUsersWithStatusQuery,
   useGetUserAdminDetailQuery,
   useAdminUpdateUserMutation,
+  useGetUsersPendingPostQuery,
+  useLazyGetUsersPendingPostQuery,
 } = userApi;

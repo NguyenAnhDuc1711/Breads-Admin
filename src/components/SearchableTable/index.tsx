@@ -22,6 +22,7 @@ interface SearchableTableProps<T> {
   totalPages: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   emptyMessage?: string;
+  error?: string;
 }
 
 const SearchableTable = <T,>({
@@ -35,6 +36,7 @@ const SearchableTable = <T,>({
   totalPages,
   setCurrentPage,
   emptyMessage = "No matching data found",
+  error,
 }: SearchableTableProps<T>) => {
   return (
     <div className="container-fluid">
@@ -74,7 +76,13 @@ const SearchableTable = <T,>({
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {error ? (
+              <tr>
+                <td colSpan={columns.length} className="text-center text-danger">
+                  {error}
+                </td>
+              </tr>
+            ) : loading ? (
               <tr>
                 <td colSpan={columns.length} className="text-center">
                   Loading...
