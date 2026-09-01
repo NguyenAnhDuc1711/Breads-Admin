@@ -30,10 +30,11 @@ const LoginPage = () => {
         return;
       }
       setAccessToken(result.accessToken);
-      // "/" (Overview) thay vì "/users" — Users giờ chỉ dành ADMIN
-      // (xem src/config/routes.ts), Moderator vào "/users" sẽ bị AdminLayout
-      // đá ngược lại /login ngay lập tức nếu điều hướng tới đó.
-      navigate("/");
+      // "/posts" thay vì "/users" — Users giờ chỉ dành ADMIN (xem
+      // src/config/routes.ts), Moderator vào "/users" sẽ bị AdminLayout đá
+      // ngược lại /login ngay lập tức nếu điều hướng tới đó. Overview ("/")
+      // tạm disable — xem src/App.tsx.
+      navigate("/posts");
     } catch {
       setError("Email hoặc mật khẩu không đúng.");
     }

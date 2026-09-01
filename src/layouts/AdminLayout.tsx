@@ -3,8 +3,8 @@ import { ROUTE_ROLES } from "@/config/routes";
 import { useGetCurrentUserQuery } from "@/store/api/userApi";
 import "./AdminLayout.css";
 
+// "/" (Overview) tạm disable — bỏ khỏi nav, xem src/App.tsx.
 const NAV_ITEMS = [
-  { path: "/", label: "Overview" },
   { path: "/posts", label: "Posts" },
   { path: "/posts/validation", label: "Posts Validation" },
   { path: "/report", label: "Report" },
