@@ -218,7 +218,7 @@ const PostsValidationPage = () => {
                 <input
                   type="text"
                   className="form-control posts-page__search-input"
-                  style={{ width: "200px", paddingLeft: "2.1rem" }}
+                  style={{ width: "200px" }}
                   placeholder="Filter author..."
                   value={authorSearchTerm}
                   onFocus={() => {
