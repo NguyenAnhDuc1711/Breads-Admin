@@ -17,10 +17,7 @@ interface ReportRespondModalProps {
 // thành <br> trước khi build payload. KHÔNG lưu bản đã convert vào state (body
 // trong state luôn giữ plain text để user tiếp tục edit đúng những gì họ gõ).
 const escapeHtml = (text: string) =>
-  text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const toHtmlBody = (text: string) => escapeHtml(text).replace(/\n/g, "<br>");
 
@@ -49,14 +46,11 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
 
   if (!report) return null;
 
-  const currentUserEmail = currentUser?.email;
-
   const handleSubmit = async () => {
-    if (!currentUserEmail || !report || isLoading) return; // FAIL-5: chặn double-submit qua isLoading
+    if (!report || isLoading) return;
     try {
       await respondReport({
         id: report._id,
-        from: currentUserEmail,
         to: report.userReport.email,
         subject,
         html: toHtmlBody(body),
@@ -95,16 +89,6 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
               type="text"
               className="form-control"
               value={report.userReport?.email ?? ""}
-              readOnly
-            />
-          </div>
-
-          <div className="report-respond-modal__field">
-            <label className="report-respond-modal__label">From</label>
-            <input
-              type="text"
-              className="form-control"
-              value={currentUserEmail ?? ""}
               readOnly
             />
           </div>
@@ -150,7 +134,7 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
             type="button"
             className="btn btn-dark btn-sm px-3"
             onClick={handleSubmit}
-            disabled={isLoading || !subject || !currentUserEmail}
+            disabled={isLoading || !subject}
           >
             {isLoading ? "Đang gửi..." : "Send"}
           </button>

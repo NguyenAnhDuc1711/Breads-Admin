@@ -42,7 +42,7 @@ export interface GetReportsResult {
 
 export interface ResponseReportArgs {
   id: string;
-  from: string;
+  from?: string;
   to: string;
   subject: string;
   html: string;
