@@ -419,9 +419,25 @@ const PostsPage = () => {
                                 </span>
                               )}
                               {hasSurvey && (
-                                <span className="posts-page__media-pill">
-                                  <FiBarChart2 size={10} /> Poll ({survey.length})
-                                </span>
+                                <>
+                                  <span className="posts-page__media-pill">
+                                    <FiBarChart2 size={10} /> Poll
+                                  </span>
+                                  {survey.slice(0, 3).map((option, i) => (
+                                    <span
+                                      key={option._id || i}
+                                      className="posts-page__survey-option-chip"
+                                      title={option.placeholder || option.value}
+                                    >
+                                      {option.placeholder || option.value}
+                                    </span>
+                                  ))}
+                                  {survey.length > 3 && (
+                                    <span className="posts-page__survey-option-chip posts-page__survey-option-chip--more">
+                                      +{survey.length - 3}
+                                    </span>
+                                  )}
+                                </>
                               )}
                             </div>
                           )}

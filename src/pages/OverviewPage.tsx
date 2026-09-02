@@ -101,7 +101,7 @@ const OverviewPage = () => {
       />
       {isAdmin && (
         <KpiCard
-          title="Tổng Users"
+          title="Total Users"
           isLoading={isUsersLoading}
           isError={isUsersError}
           value={usersResult?.count}

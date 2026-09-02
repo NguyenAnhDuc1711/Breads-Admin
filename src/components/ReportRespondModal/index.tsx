@@ -117,7 +117,7 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
 
           {error && (
             <div className="report-respond-modal__error">
-              Gửi thất bại, thử lại
+              Failed to send, please try again
             </div>
           )}
         </div>
@@ -136,7 +136,7 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
             onClick={handleSubmit}
             disabled={isLoading || !subject}
           >
-            {isLoading ? "Đang gửi..." : "Send"}
+            {isLoading ? "Sending..." : "Send"}
           </button>
         </div>
       </div>

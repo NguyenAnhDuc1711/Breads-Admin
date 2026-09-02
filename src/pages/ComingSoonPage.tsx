@@ -6,7 +6,7 @@ const ComingSoonPage = ({ title }: ComingSoonPageProps) => {
   return (
     <div className="container-fluid py-4">
       <h2>{title}</h2>
-      <p className="text-muted">Khu vực này đang được xây dựng.</p>
+      <p className="text-muted">This area is under construction.</p>
     </div>
   );
 };

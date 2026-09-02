@@ -1,6 +1,13 @@
-import { Navigate, NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { ROUTE_ROLES } from "@/config/routes";
-import { useGetCurrentUserQuery } from "@/store/api/userApi";
+import { useGetCurrentUserQuery, useLogoutMutation } from "@/store/api/userApi";
+import { setAccessToken } from "@/Breads-Shared/Auth/TokenManager";
 import "./AdminLayout.css";
 
 // "/" (Overview) tạm disable — bỏ khỏi nav, xem src/App.tsx.
@@ -13,7 +20,18 @@ const NAV_ITEMS = [
 
 const AdminLayout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { data: currentUser, isLoading } = useGetCurrentUserQuery();
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+    } finally {
+      setAccessToken(null);
+      navigate("/login", { replace: true });
+    }
+  };
 
   // Chưa có dữ liệu role — không được redirect vội (tránh flash-redirect
   // /login trước khi query resolve xong).
@@ -68,6 +86,23 @@ const AdminLayout = () => {
             </li>
           ))}
         </ul>
+        <div className="admin-layout__user">
+          <div className="admin-layout__avatar">
+            {(currentUser.name || currentUser.username || "U")
+              .slice(0, 2)
+              .toUpperCase()}
+          </div>
+          <span className="admin-layout__username">
+            {currentUser.name || currentUser.username}
+          </span>
+          <button
+            type="button"
+            className="admin-layout__logout-btn"
+            onClick={handleLogout}
+          >
+            Log out
+          </button>
+        </div>
       </nav>
       <div className="admin-layout__content flex-fill">
         <Outlet />

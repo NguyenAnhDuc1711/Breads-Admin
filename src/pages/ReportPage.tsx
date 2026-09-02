@@ -172,16 +172,16 @@ const ReportPage = () => {
                   <td colSpan={4}>
                     <div className="posts-page__empty">
                       <div className="posts-page__empty-title">
-                        Không tải được danh sách report
+                        Failed to load report list
                       </div>
                       <div className="posts-page__empty-desc">
-                        Lỗi kết nối tới server — thử làm mới trang.
+                        Server connection error — try refreshing the page.
                       </div>
                       <button
                         className="btn btn-outline-dark btn-sm px-3"
                         onClick={() => refetch()}
                       >
-                        Thử lại
+                        Retry
                       </button>
                     </div>
                   </td>
@@ -282,7 +282,7 @@ const ReportPage = () => {
                   <td colSpan={4}>
                     <div className="posts-page__empty">
                       <div className="posts-page__empty-title">
-                        Không có report nào đang chờ xử lý
+                        No reports pending review
                       </div>
                     </div>
                   </td>

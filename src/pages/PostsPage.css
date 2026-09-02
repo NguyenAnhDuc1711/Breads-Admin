@@ -369,6 +369,26 @@
   border: 1px solid #e2e8f0;
 }
 
+.posts-page__survey-option-chip {
+  font-size: 0.675rem;
+  font-weight: 500;
+  max-width: 110px;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: #eef2ff;
+  color: #4338ca;
+  border: 1px solid #e0e7ff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.posts-page__survey-option-chip--more {
+  max-width: none;
+  color: #6366f1;
+  font-weight: 600;
+}
+
 /* Type Badges */
 .posts-page__type-badge {
   display: inline-flex;

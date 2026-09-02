@@ -26,7 +26,7 @@ const LoginPage = () => {
         // Login already set a valid refreshToken cookie server-side — undo
         // it, this account has no business holding an admin session.
         await logout();
-        setError("Tài khoản này không có quyền truy cập trang quản trị.");
+        setError("This account does not have access to the admin panel.");
         return;
       }
       setAccessToken(result.accessToken);
@@ -36,7 +36,7 @@ const LoginPage = () => {
       // tạm disable — xem src/App.tsx.
       navigate("/posts");
     } catch {
-      setError("Email hoặc mật khẩu không đúng.");
+      setError("Incorrect email or password.");
     }
   };
 
@@ -44,7 +44,7 @@ const LoginPage = () => {
     <div className="login-page">
       <form className="login-page__card" onSubmit={handleSubmit}>
         <h1 className="login-page__title">Breads Admin</h1>
-        <p className="login-page__subtitle">Đăng nhập để tiếp tục</p>
+        <p className="login-page__subtitle">Sign in to continue</p>
 
         {error && <div className="login-page__error">{error}</div>}
 
@@ -59,7 +59,7 @@ const LoginPage = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Mật khẩu</label>
+          <label className="form-label">Password</label>
           <input
             type="password"
             className="form-control"
@@ -73,7 +73,7 @@ const LoginPage = () => {
           className="btn btn-dark w-100"
           disabled={isLoading}
         >
-          {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+          {isLoading ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </div>
