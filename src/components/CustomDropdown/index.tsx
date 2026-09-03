@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { FiCheck, FiChevronDown } from "react-icons/fi";
 
-// --- Custom Reusable Dropdown for Filters ---
 export interface DropdownOption<T> {
   value: T;
   label: string;

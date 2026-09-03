@@ -4,9 +4,6 @@ import { useGetPostsQuery } from "@/store/api/postApi";
 import { useGetReportsQuery } from "@/store/api/reportApi";
 import { useGetCurrentUserQuery, useGetUsersWithStatusQuery } from "@/store/api/userApi";
 
-// Render giá trị 1 KPI card theo 3 trạng thái (loading/error/success) — tránh
-// lặp code cho 3 card (plan-review FAIL-1: mỗi card phải phân biệt rõ
-// loading/error/success bao gồm cả giá trị 0, không được hiện undefined/NaN).
 const renderCardValue = (
   isLoading: boolean,
   isError: boolean,

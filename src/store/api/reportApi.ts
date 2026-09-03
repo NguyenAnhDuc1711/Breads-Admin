@@ -21,14 +21,11 @@ export interface IReportUserInfo {
   email: string;
 }
 
-// getReports (queue PENDING) trả thêm media + userReport — khác IReport gốc
-// (dùng cho getReportsByUser, chỉ select content/status/createdAt).
 export interface IReportQueueItem extends IReport {
   media: IReportMedia[];
   userReport: IReportUserInfo;
 }
 
-// Bước 10 (access-control-hardening): `userId` bỏ khỏi request - BE xét quyền trên `req.user.role`.
 export interface GetReportsArgs {
   searchValue?: string;
   page: number;

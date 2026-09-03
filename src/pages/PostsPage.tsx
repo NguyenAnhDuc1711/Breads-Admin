@@ -146,7 +146,6 @@ const PostsPage = () => {
   const currentRangeStart = totalCount === 0 ? 0 : (currentPage - 1) * ROWS_PER_PAGE + 1;
   const currentRangeEnd = Math.min(currentPage * ROWS_PER_PAGE, totalCount);
 
-  // Client-side search for currently loaded posts
   const filteredPosts = useMemo(() => {
     const list = posts ?? [];
     const term = searchValue.trim().toLowerCase();
@@ -282,7 +281,6 @@ const PostsPage = () => {
             </thead>
             <tbody>
               {isFetching ? (
-                // Skeletons
                 Array.from({ length: ROWS_PER_PAGE }).map((_, index) => (
                   <tr key={`skeleton-${index}`}>
                     <td>
@@ -500,7 +498,6 @@ const PostsPage = () => {
                   );
                 })
               ) : (
-                // Empty State
                 <tr>
                   <td colSpan={6}>
                     <div className="posts-page__empty">

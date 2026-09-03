@@ -11,10 +11,6 @@ interface ReportRespondModalProps {
   onClose: () => void;
 }
 
-// [plan-review FAIL-1] body từ textarea gửi thẳng làm field `html` cho nodemailer
-// sẽ mất line-break và có thể vỡ HTML nếu chứa <, >, & — escape rồi convert \n
-// thành <br> trước khi build payload. KHÔNG lưu bản đã convert vào state (body
-// trong state luôn giữ plain text để user tiếp tục edit đúng những gì họ gõ).
 const escapeHtml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -26,13 +22,11 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
-  // Reset chỉ khi report đổi (mở modal cho report khác) — KHÔNG reset khi lỗi (FR-5).
   useEffect(() => {
     setSubject("");
     setBody("");
   }, [report?._id]);
 
-  // Đóng bằng phím Esc — mirror PostDetailModal.
   useEffect(() => {
     if (!report) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -48,14 +42,12 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
     if (!report || isLoading) return;
     try {
       await respondReport({
-        // #1: `to` bỏ khỏi request — BE suy ra người nhận từ chính report, không tin client.
         id: report._id,
         subject,
         html: toHtmlBody(body),
       }).unwrap();
       onClose();
     } catch {
-      // Lỗi: KHÔNG đóng modal, KHÔNG reset subject/body — giữ nguyên (FR-5)
     }
   };
 

@@ -68,8 +68,6 @@ const getReportStatusInfo = (status: number) => {
   }
 };
 
-// --- Sub-components ---
-
 const UserRoleBadge = ({ role }: { role?: number }) => {
   const { ADMIN, MODERATOR } = Constants.USER_ROLE;
   if (role === ADMIN) {
@@ -381,7 +379,6 @@ const UserAdminForm = ({ user }: { user: IUser }) => {
   );
 };
 
-// --- Main Page Component ---
 const UserDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();

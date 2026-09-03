@@ -19,8 +19,6 @@ const ReportPage = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue);
   const [currentPage, setCurrentPage] = useState(1);
-  // selectedReport is consumed by task #21 (ReportRespondModal, not yet built) — kept here
-  // so the Respond action can wire straight into it once that component lands.
   const [selectedReport, setSelectedReport] = useState<IReportQueueItem | null>(null);
 
   const {
