@@ -26,17 +26,11 @@ const rawBaseQuery = fetchBaseQuery({
   },
 });
 
-// BE wraps success bodies as { metadata }; unwrap once here instead of
-// repeating it in every injected endpoint's transformResponse.
 const unwrap = (data: unknown) =>
   data && typeof data === "object" && "metadata" in (data as any)
     ? (data as any).metadata
     : data;
 
-// Redirects to Admin's own /login (resolves to /admin/login once deployed
-// under BASE_PATH). Guarded so concurrent failed queries (e.g.
-// getCurrentUser + getUsersWithStatus both firing on mount) only redirect
-// once instead of re-assigning location.href per failure.
 let redirecting = false;
 const redirectToLogin = () => {
   if (redirecting) return;
@@ -56,8 +50,6 @@ const baseQueryWithReauth: BaseQueryFn<
     | undefined;
   const url = typeof args === "string" ? args : args.url;
   const isRefreshCall = url.includes(USER_PATH.REFRESH_TOKEN);
-  // A failed login attempt (wrong password) is also a 401 — must not
-  // trigger a redirect loop while the user is on the login page itself.
   const isLoginCall = url.includes(USER_PATH.LOGIN);
 
   if (error?.status === 401 && !isRefreshCall && !isLoginCall) {
@@ -70,8 +62,6 @@ const baseQueryWithReauth: BaseQueryFn<
         redirectToLogin();
       }
     } else {
-      // No refreshToken/access token at all — genuinely not logged in,
-      // nothing to refresh.
       redirectToLogin();
     }
   }
@@ -83,8 +73,6 @@ const baseQueryWithReauth: BaseQueryFn<
   return result;
 };
 
-// Shared instance — feature slices add endpoints via api.injectEndpoints
-// instead of each calling createApi separately.
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,

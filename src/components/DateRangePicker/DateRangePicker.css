@@ -1,10 +1,8 @@
-/* DateRangePicker Modern Popover Styling */
 .date-range-picker {
   position: relative;
   display: inline-block;
 }
 
-/* Trigger Button */
 .date-range-picker__trigger {
   height: 36px;
   background: #ffffff;
@@ -63,7 +61,6 @@
   background: #fee2e2;
 }
 
-/* Popover Card */
 .date-range-picker__popover {
   position: absolute;
   top: calc(100% + 6px);
@@ -120,7 +117,6 @@
   }
 }
 
-/* Presets Sidebar */
 .date-range-picker__sidebar {
   width: 130px;
   background: #f8fafc;
@@ -160,7 +156,6 @@
   color: #ffffff;
 }
 
-/* Calendar Section */
 .date-range-picker__calendar-wrap {
   padding: 0.75rem 1rem;
   width: 280px;
@@ -168,7 +163,6 @@
   flex-direction: column;
 }
 
-/* Calendar Header */
 .date-range-picker__cal-header {
   display: flex;
   align-items: center;
@@ -202,7 +196,6 @@
   border-color: #cbd5e1;
 }
 
-/* Grid */
 .date-range-picker__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -293,7 +286,6 @@
   background: #ffffff;
 }
 
-/* Footer */
 .date-range-picker__footer {
   display: flex;
   align-items: center;

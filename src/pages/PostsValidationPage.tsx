@@ -68,7 +68,6 @@ const PostsValidationPage = () => {
 
   const [updatePostStatus] = useUpdatePostStatusMutation();
 
-  // Click outside for author search dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -124,7 +123,6 @@ const PostsValidationPage = () => {
   const currentRangeStart = totalCount === 0 ? 0 : (currentPage - 1) * ROWS_PER_PAGE + 1;
   const currentRangeEnd = Math.min(currentPage * ROWS_PER_PAGE, totalCount);
 
-  // Client-side search on currently loaded batch
   const filteredPosts = useMemo(() => {
     const list = posts ?? [];
     const term = searchValue.trim().toLowerCase();
@@ -323,7 +321,6 @@ const PostsValidationPage = () => {
             </thead>
             <tbody>
               {isFetching ? (
-                // Skeletons
                 Array.from({ length: ROWS_PER_PAGE }).map((_, index) => (
                   <tr key={`skeleton-${index}`}>
                     <td>
@@ -515,7 +512,6 @@ const PostsValidationPage = () => {
                   );
                 })
               ) : (
-                // Empty State
                 <tr>
                   <td colSpan={4}>
                     <div className="posts-page__empty">

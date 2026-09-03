@@ -1,4 +1,3 @@
-/* UsersPage Full-Height Zero-Outer-Scroll Layout */
 .users-page {
   height: 100%;
   max-height: 100vh;
@@ -10,7 +9,6 @@
   gap: 0.75rem;
 }
 
-/* Header */
 .users-page__header {
   display: flex;
   justify-content: space-between;
@@ -52,7 +50,6 @@
   margin-bottom: 0;
 }
 
-/* Filter Card */
 .users-page__filter-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -123,7 +120,6 @@
   background: #f1f5f9;
 }
 
-/* Reusable Custom Dropdown Component */
 .custom-dropdown {
   position: relative;
   display: inline-block;
@@ -224,7 +220,6 @@
   background-color: #f8fafc;
 }
 
-/* Bulk Banner */
 .users-page__bulk-banner {
   background: #eff6ff;
   border: 1px solid #bfdbfe;
@@ -248,7 +243,6 @@
   }
 }
 
-/* Table Card Container */
 .users-page__table-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -310,7 +304,6 @@
   border-bottom: none;
 }
 
-/* User Identity Cell */
 .users-page__user-cell {
   display: flex;
   align-items: center;
@@ -393,7 +386,6 @@
   white-space: nowrap;
 }
 
-/* Role Badges */
 .users-page__role-badge {
   display: inline-flex;
   align-items: center;
@@ -422,7 +414,6 @@
   border: 1px solid #e2e8f0;
 }
 
-/* Custom Status Dropdown Menu for table rows */
 .users-page__status-dropdown {
   position: relative;
   display: inline-block;
@@ -518,7 +509,6 @@
   background-color: #f8fafc;
 }
 
-/* Action Button */
 .users-page__action-btn {
   display: inline-flex;
   align-items: center;
@@ -541,7 +531,6 @@
   border-color: #0f172a;
 }
 
-/* Table Footer / Pagination Bar */
 .users-page__table-footer {
   padding: 0.65rem 1rem;
   display: flex;
@@ -557,7 +546,6 @@
   color: #64748b;
 }
 
-/* Skeletons */
 .users-page__skeleton {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
   background-size: 200% 100%;
@@ -574,7 +562,6 @@
   }
 }
 
-/* Empty State */
 .users-page__empty {
   padding: 2.5rem 1rem;
   text-align: center;

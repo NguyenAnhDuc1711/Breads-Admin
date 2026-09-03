@@ -34,12 +34,9 @@ const EXPORT_ALL_LIMIT = 1_000_000;
 const ROWS_PER_PAGE = 10;
 const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
 
-// Derive effective status from lastActiveAt (for Online/Offline) + status field (for Lock/Banned)
 const getEffectiveStatus = (user: IUser): number => {
   const { ACTIVE, INACTIVE, LOCK, BANNED } = Constants.USER_STATUS;
-  // Lock/Banned are hard states set by admin
   if (user.status === LOCK || user.status === BANNED) return user.status;
-  // Otherwise derive from lastActiveAt
   if (user.lastActiveAt) {
     const lastActive = new Date(user.lastActiveAt).getTime();
     return Date.now() - lastActive <= ONLINE_THRESHOLD_MS ? ACTIVE : INACTIVE;
@@ -47,7 +44,6 @@ const getEffectiveStatus = (user: IUser): number => {
   return INACTIVE;
 };
 
-// --- Sub-components ---
 const UserAvatar = ({
   avatar,
   name,
@@ -261,7 +257,6 @@ const UserStatusSelect = ({
   );
 };
 
-// --- Main UsersPage Component ---
 const UsersPage = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
@@ -616,7 +611,6 @@ const UsersPage = () => {
             </thead>
             <tbody>
               {isFetching ? (
-                // Skeletons
                 Array.from({ length: ROWS_PER_PAGE }).map((_, index) => (
                   <tr key={`skeleton-${index}`}>
                     <td style={{ textAlign: "center" }}>
@@ -780,7 +774,6 @@ const UsersPage = () => {
                   );
                 })
               ) : (
-                // Empty State
                 <tr>
                   <td colSpan={7}>
                     <div className="users-page__empty">

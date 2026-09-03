@@ -5,9 +5,6 @@ export interface SearchableTableColumn<T> {
   key: string;
   header: string;
   render: (row: T) => ReactNode;
-  /** Inline style applied to the <td> itself (column width/alignment) — kept
-   * separate from `render`'s own markup so cell content doesn't need to know
-   * about column sizing. */
   cellStyle?: CSSProperties;
 }
 

@@ -80,7 +80,6 @@ export const userApi = api.injectEndpoints({
         dateTo,
       }) => ({
         url: Route.USER + USER_PATH.GET_USERS_WITH_STATUS,
-        // Bước 10 (access-control-hardening): `userId` bỏ khỏi request - BE xét quyền trên `req.user.role`.
         params: { page, limit, searchValue, role, status, dateFrom, dateTo },
       }),
       providesTags: ["User"],
@@ -103,7 +102,7 @@ export const userApi = api.injectEndpoints({
       query: (payload) => ({
         url: Route.USER + USER_PATH.GET_USERS_PENDING_POST,
         method: "POST",
-        body: payload, // KHÔNG kèm userId — danh tính lấy từ JWT (protectRoute ở BE)
+        body: payload,
       }),
     }),
   }),

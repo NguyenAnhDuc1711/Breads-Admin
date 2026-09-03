@@ -4,18 +4,16 @@ import { api } from "./baseApi";
 
 export interface GetPostsArgs {
   userId: string;
-  filterPage: string; // "admin/posts" | "admin/posts/validation"
-  user?: string; // authorId, filter.user
-  postContent?: string[]; // filter.postContent
-  postType?: string[]; // filter.postType
-  dateFrom?: string; // filter.dateFrom (ISO date string)
-  dateTo?: string; // filter.dateTo (ISO date string)
+  filterPage: string;
+  user?: string;
+  postContent?: string[];
+  postType?: string[];
+  dateFrom?: string;
+  dateTo?: string;
   page: number;
   limit: number;
 }
 
-// BE trả {data, totalCount} CHỈ cho 2 trang admin (post.controller.ts getPosts) — mọi
-// filterPage khác (không dùng trong Admin panel) vẫn là mảng thô, không đi qua type này.
 export interface GetPostsResult {
   data: IPost[];
   totalCount: number;
@@ -59,7 +57,6 @@ export const postApi = api.injectEndpoints({
       query: ({ postId, status }) => ({
         url: Route.POST + POST_PATH.UPDATE_POST_STATUS.replace(":id", postId),
         method: "PATCH",
-        // Bước 10: `userId` bỏ khỏi body — BE xét quyền trên `req.user.role`.
         body: { status },
       }),
       invalidatesTags: ["Post"],

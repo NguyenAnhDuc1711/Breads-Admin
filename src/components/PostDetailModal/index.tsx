@@ -27,7 +27,6 @@ const MediaItem = ({ url, type }: { url: string; type: string }) => {
       <video src={url} controls className="post-detail-modal__media-item" />
     );
   }
-  // GIF và IMAGE đều render bằng <img> — trình duyệt tự phát GIF động.
   return (
     <img
       src={url}
@@ -62,7 +61,6 @@ const QuotedPostPreview = ({
 };
 
 const PostDetailModal = ({ post, onClose }: PostDetailModalProps) => {
-  // Đóng bằng phím Esc — hành vi modal tiêu chuẩn.
   useEffect(() => {
     if (!post) return;
     const handleKeyDown = (e: KeyboardEvent) => {

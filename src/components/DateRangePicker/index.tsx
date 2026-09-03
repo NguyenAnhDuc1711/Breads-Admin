@@ -43,7 +43,6 @@ const DateRangePicker = ({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Active view month in calendar
   const initialDate = useMemo(() => {
     if (dateFrom) return new Date(dateFrom);
     return new Date();
@@ -52,12 +51,10 @@ const DateRangePicker = ({
   const [viewYear, setViewYear] = useState(initialDate.getFullYear());
   const [viewMonth, setViewMonth] = useState(initialDate.getMonth());
 
-  // Temp selection state before applying
   const [tempStart, setTempStart] = useState<string | undefined>(dateFrom);
   const [tempEnd, setTempEnd] = useState<string | undefined>(dateTo);
   const [hoverDate, setHoverDate] = useState<string | undefined>(undefined);
 
-  // Sync temp state with props when opened
   useEffect(() => {
     if (isOpen) {
       setTempStart(dateFrom);
@@ -71,7 +68,6 @@ const DateRangePicker = ({
     }
   }, [isOpen, dateFrom, dateTo]);
 
-  // Align right if popover would overflow viewport on the right
   const [alignRight, setAlignRight] = useState(false);
 
   useEffect(() => {
@@ -80,8 +76,7 @@ const DateRangePicker = ({
     const checkPosition = () => {
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const popoverWidth = 420; // 130px sidebar + 280px calendar + borders/padding
-        // If placing it on the left would cause right overflow
+        const popoverWidth = 420;
         if (rect.left + popoverWidth > window.innerWidth - 16) {
           setAlignRight(true);
         } else {
@@ -95,7 +90,6 @@ const DateRangePicker = ({
     return () => window.removeEventListener("resize", checkPosition);
   }, [isOpen]);
 
-  // Click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -131,7 +125,6 @@ const DateRangePicker = ({
     }
   };
 
-  // Calendar cells generation
   const daysInMonth = useMemo(() => {
     const firstDayIndex = new Date(viewYear, viewMonth, 1).getDay();
     const lastDate = new Date(viewYear, viewMonth + 1, 0).getDate();
@@ -139,7 +132,6 @@ const DateRangePicker = ({
 
     const days: { dateStr: string; dayNum: number; isCurrentMonth: boolean }[] = [];
 
-    // Prev month padding days
     for (let i = firstDayIndex - 1; i >= 0; i--) {
       const d = prevMonthLastDate - i;
       const prevDate = new Date(viewYear, viewMonth - 1, d);
@@ -150,7 +142,6 @@ const DateRangePicker = ({
       });
     }
 
-    // Current month days
     for (let i = 1; i <= lastDate; i++) {
       const curDate = new Date(viewYear, viewMonth, i);
       days.push({
@@ -160,7 +151,6 @@ const DateRangePicker = ({
       });
     }
 
-    // Next month padding days to make complete 5 or 6 weeks (multiples of 7)
     const remaining = (7 - (days.length % 7)) % 7;
     for (let i = 1; i <= remaining; i++) {
       const nextDate = new Date(viewYear, viewMonth + 1, i);
@@ -178,11 +168,9 @@ const DateRangePicker = ({
 
   const handleDateClick = (dateStr: string) => {
     if (!tempStart || (tempStart && tempEnd)) {
-      // First click: start new range
       setTempStart(dateStr);
       setTempEnd(undefined);
     } else if (tempStart && !tempEnd) {
-      // Second click: finish range
       if (dateStr < tempStart) {
         setTempStart(dateStr);
         setTempEnd(tempStart);
@@ -209,7 +197,6 @@ const DateRangePicker = ({
     setIsOpen(false);
   };
 
-  // Presets handler
   const applyPreset = (type: string) => {
     const today = new Date();
     let start = new Date();
@@ -254,7 +241,6 @@ const DateRangePicker = ({
     setIsOpen(false);
   };
 
-  // Display text in trigger button
   const triggerLabel = useMemo(() => {
     if (dateFrom && dateTo) {
       if (dateFrom === dateTo) return formatDisplayDate(dateFrom);
@@ -387,7 +373,6 @@ const DateRangePicker = ({
                 const isEnd = day.dateStr === tempEnd;
                 const isSingle = isStart && !tempEnd;
 
-                // Range calculation
                 let inRange = false;
                 if (tempStart && tempEnd) {
                   inRange = day.dateStr > tempStart && day.dateStr < tempEnd;
