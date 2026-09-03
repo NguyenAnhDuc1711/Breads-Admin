@@ -110,7 +110,7 @@ const PostsValidationPage = () => {
 
   const handleUpdateStatus = (postId: string | undefined, status: number) => {
     if (!currentUser || !postId) return;
-    updatePostStatus({ postId, userId: currentUser._id, status });
+    updatePostStatus({ postId, status });
   };
 
   const handlePageChange: Dispatch<SetStateAction<number>> = (value) => {

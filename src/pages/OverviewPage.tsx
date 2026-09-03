@@ -56,7 +56,7 @@ const OverviewPage = () => {
     isLoading: isReportsLoading,
     isError: isReportsError,
   } = useGetReportsQuery(
-    { userId: currentUser?._id ?? "", page: 1, limit: 1 },
+    { page: 1, limit: 1 },
     { skip: !currentUser?._id },
   );
 
@@ -79,7 +79,7 @@ const OverviewPage = () => {
     isLoading: isUsersLoading,
     isError: isUsersError,
   } = useGetUsersWithStatusQuery(
-    { userId: currentUser?._id ?? "", page: 1, limit: 1 },
+    { page: 1, limit: 1 },
     { skip: !currentUser?._id || !isAdmin },
   );
 

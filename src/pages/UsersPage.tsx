@@ -275,7 +275,6 @@ const UsersPage = () => {
   const { data: currentUser } = useGetCurrentUserQuery();
   const { data, isFetching, refetch } = useGetUsersWithStatusQuery(
     {
-      userId: currentUser?._id ?? "",
       page: currentPage,
       limit: ROWS_PER_PAGE,
       searchValue: debounceSearch,
@@ -367,7 +366,6 @@ const UsersPage = () => {
 
   const handleExportCsv = async () => {
     const result = await triggerExport({
-      userId: currentUser?._id ?? "",
       page: 1,
       limit: EXPORT_ALL_LIMIT,
       searchValue: debounceSearch,

@@ -23,7 +23,6 @@ export interface GetPostsResult {
 
 export interface UpdatePostStatusArgs {
   postId: string;
-  userId: string;
   status: number;
 }
 
@@ -57,10 +56,11 @@ export const postApi = api.injectEndpoints({
       providesTags: ["Post"],
     }),
     updatePostStatus: builder.mutation<void, UpdatePostStatusArgs>({
-      query: ({ postId, userId, status }) => ({
+      query: ({ postId, status }) => ({
         url: Route.POST + POST_PATH.UPDATE_POST_STATUS.replace(":id", postId),
         method: "PATCH",
-        body: { userId, status },
+        // Bước 10: `userId` bỏ khỏi body — BE xét quyền trên `req.user.role`.
+        body: { status },
       }),
       invalidatesTags: ["Post"],
     }),

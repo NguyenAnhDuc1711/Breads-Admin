@@ -8,7 +8,6 @@ export interface UsersWithStatusResult {
 }
 
 export interface GetUsersWithStatusArgs {
-  userId: string;
   page: number;
   limit: number;
   searchValue?: string;
@@ -72,7 +71,6 @@ export const userApi = api.injectEndpoints({
       GetUsersWithStatusArgs
     >({
       query: ({
-        userId,
         page,
         limit,
         searchValue,
@@ -82,7 +80,8 @@ export const userApi = api.injectEndpoints({
         dateTo,
       }) => ({
         url: Route.USER + USER_PATH.GET_USERS_WITH_STATUS,
-        params: { userId, page, limit, searchValue, role, status, dateFrom, dateTo },
+        // Bước 10 (access-control-hardening): `userId` bỏ khỏi request - BE xét quyền trên `req.user.role`.
+        params: { page, limit, searchValue, role, status, dateFrom, dateTo },
       }),
       providesTags: ["User"],
     }),

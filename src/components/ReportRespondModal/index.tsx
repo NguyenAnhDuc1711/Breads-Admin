@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { useGetCurrentUserQuery } from "@/store/api/userApi";
 import {
   useResponseReportMutation,
   type IReportQueueItem,
@@ -22,7 +21,6 @@ const escapeHtml = (text: string) =>
 const toHtmlBody = (text: string) => escapeHtml(text).replace(/\n/g, "<br>");
 
 const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
-  const { data: currentUser } = useGetCurrentUserQuery();
   const [respondReport, { isLoading, error }] = useResponseReportMutation();
 
   const [subject, setSubject] = useState("");
@@ -50,11 +48,10 @@ const ReportRespondModal = ({ report, onClose }: ReportRespondModalProps) => {
     if (!report || isLoading) return;
     try {
       await respondReport({
+        // #1: `to` bỏ khỏi request — BE suy ra người nhận từ chính report, không tin client.
         id: report._id,
-        to: report.userReport.email,
         subject,
         html: toHtmlBody(body),
-        userId: currentUser?._id ?? "",
       }).unwrap();
       onClose();
     } catch {

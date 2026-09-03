@@ -30,7 +30,6 @@ const ReportPage = () => {
     refetch,
   } = useGetReportsQuery(
     {
-      userId: currentUser?._id ?? "",
       searchValue: debouncedSearch,
       page: currentPage,
       limit: ROWS_PER_PAGE,
@@ -43,7 +42,7 @@ const ReportPage = () => {
 
   const handleReject = (reportId: string) => {
     if (!currentUser) return;
-    rejectReport({ id: reportId, userId: currentUser._id });
+    rejectReport({ id: reportId });
   };
 
   const totalCount = result?.totalCount ?? 0;

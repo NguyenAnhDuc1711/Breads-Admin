@@ -28,8 +28,8 @@ export interface IReportQueueItem extends IReport {
   userReport: IReportUserInfo;
 }
 
+// Bước 10 (access-control-hardening): `userId` bỏ khỏi request - BE xét quyền trên `req.user.role`.
 export interface GetReportsArgs {
-  userId: string;
   searchValue?: string;
   page: number;
   limit: number;
@@ -42,16 +42,12 @@ export interface GetReportsResult {
 
 export interface ResponseReportArgs {
   id: string;
-  from?: string;
-  to: string;
   subject: string;
   html: string;
-  userId: string;
 }
 
 export interface RejectReportArgs {
   id: string;
-  userId: string;
 }
 
 export const reportApi = api.injectEndpoints({
@@ -63,10 +59,9 @@ export const reportApi = api.injectEndpoints({
       providesTags: ["Report"],
     }),
     getReports: builder.query<GetReportsResult, GetReportsArgs>({
-      query: ({ userId, searchValue, page, limit }) => ({
+      query: ({ searchValue, page, limit }) => ({
         url: Route.REPORT + REPORT_PATH.GET,
         params: {
-          userId,
           page,
           limit,
           ...(searchValue ? { searchValue } : {}),
@@ -75,18 +70,17 @@ export const reportApi = api.injectEndpoints({
       providesTags: ["Report"],
     }),
     responseReport: builder.mutation<void, ResponseReportArgs>({
-      query: ({ id, from, to, subject, html, userId }) => ({
+      query: ({ id, subject, html }) => ({
         url: Route.REPORT + REPORT_PATH.RESPONSE.replace(":id", id),
         method: "PATCH",
-        body: { from, to, subject, html, userId },
+        body: { subject, html },
       }),
       invalidatesTags: ["Report"],
     }),
     rejectReport: builder.mutation<void, RejectReportArgs>({
-      query: ({ id, userId }) => ({
+      query: ({ id }) => ({
         url: Route.REPORT + REPORT_PATH.REJECT.replace(":id", id),
         method: "PATCH",
-        body: { userId },
       }),
       invalidatesTags: ["Report"],
     }),

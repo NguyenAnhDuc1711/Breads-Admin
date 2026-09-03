@@ -458,7 +458,6 @@ const PostsPage = () => {
                             if (!post._id || !currentUser?._id) return;
                             updatePostStatus({
                               postId: post._id,
-                              userId: currentUser._id,
                               status: newStatus,
                             });
                           }}
